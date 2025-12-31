@@ -32,7 +32,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'DevTrack API is running 🚀' });
 });
 
-// TODO: Mount routes (auth, logs, snippets, goals, analytics)
+// Mount routes
+const authRoutes = require('./src/routes/authRoutes');
+app.use('/api/auth', authRoutes);
+// TODO: Mount other routes (logs, snippets, goals, analytics)
 
 // Error handling middleware placeholder
 app.use((err, req, res, next) => {
