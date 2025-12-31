@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { createSnippet } from '../../services/snippetService';
 
@@ -24,6 +25,7 @@ const SnippetEditor = ({ onCreated }) => {
     setError('');
     try {
       await createSnippet(snippet);
+      toast.success('Snippet saved');
       onCreated?.();
       setSnippet({ title: '', language: 'javascript', code: '', description: '' });
     } catch (err) {

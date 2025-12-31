@@ -1,4 +1,5 @@
 import { Copy, Trash2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { deleteSnippet } from '../../services/snippetService';
 import { useState } from 'react';
 
@@ -6,6 +7,7 @@ const SnippetCard = ({ snippet, onDeleted }) => {
   const [loading, setLoading] = useState(false);
 
   const handleCopy = () => {
+    toast.success('Code copied to clipboard');
     navigator.clipboard.writeText(snippet.code);
   };
 
@@ -13,6 +15,7 @@ const SnippetCard = ({ snippet, onDeleted }) => {
     if (!confirm('Delete this snippet?')) return;
     setLoading(true);
     await deleteSnippet(snippet._id);
+    toast.success('Snippet deleted');
     onDeleted?.();
   };
 

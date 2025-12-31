@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { createLog } from '../../services/logService';
+import { toast } from 'react-hot-toast';
 
 const WORK_MINUTES = 25;
 const BREAK_MINUTES = 5;
@@ -25,7 +27,21 @@ const PomodoroTimer = () => {
         setIsBreak(false);
         setSeconds(WORK_MINUTES * 60);
       } else {
-        // work session finished -> start break
+        // work session finished -> auto log and start break
+        (async () => {
+          try {
+            await createLog({
+            title: 'Pomodoro Session',
+            category: 'Coding',
+            duration: WORK_MINUTES * 60,
+            date: new Date().toISOString(),
+            notes: 'Auto-logged pomodoro focus session',
+          });
+          toast.success('Pomodoro logged');
+        } catch (err) {
+          console.error(err);
+        }
+        })();
         setIsBreak(true);
         setSeconds(BREAK_MINUTES * 60);
       }

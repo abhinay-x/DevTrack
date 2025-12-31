@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './Navbar';
 
 const Layout = () => {
@@ -8,6 +9,7 @@ const Layout = () => {
       <main className="flex-1 p-4">
         <Outlet />
       </main>
+      <Toaster position="top-right" />
     </div>
   );
 };

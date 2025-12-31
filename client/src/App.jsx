@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Snippets from './pages/Snippets';
 import Goals from './pages/Goals';
 import Layout from './components/common/Layout';
+import PrivateRoute from './components/common/PrivateRoute';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import './index.css';
@@ -15,14 +16,16 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route element={<Layout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-                          <Route path="/" element={<Dashboard />} />
+
+            <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
+              <Route path="/" element={<Dashboard />} />
               <Route path="/snippets" element={<Snippets />} />
               <Route path="/goals" element={<Goals />} />
-                          <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
