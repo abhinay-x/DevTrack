@@ -38,10 +38,11 @@ app.use('/api/auth', authRoutes);
 const logRoutes = require('./src/routes/logRoutes');
 const snippetRoutes = require('./src/routes/snippetRoutes');
 const goalRoutes = require('./src/routes/goalRoutes');
-// TODO: add analyticsRoutes once implemented
+const analyticsRoutes = require('./src/routes/analyticsRoutes');
 app.use('/api/logs', logRoutes);
 app.use('/api/snippets', snippetRoutes);
 app.use('/api/goals', goalRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Error handling middleware placeholder
 app.use((err, req, res, next) => {
