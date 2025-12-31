@@ -35,7 +35,13 @@ app.get('/', (req, res) => {
 // Mount routes
 const authRoutes = require('./src/routes/authRoutes');
 app.use('/api/auth', authRoutes);
-// TODO: Mount other routes (logs, snippets, goals, analytics)
+const logRoutes = require('./src/routes/logRoutes');
+const snippetRoutes = require('./src/routes/snippetRoutes');
+const goalRoutes = require('./src/routes/goalRoutes');
+// TODO: add analyticsRoutes once implemented
+app.use('/api/logs', logRoutes);
+app.use('/api/snippets', snippetRoutes);
+app.use('/api/goals', goalRoutes);
 
 // Error handling middleware placeholder
 app.use((err, req, res, next) => {
