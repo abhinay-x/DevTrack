@@ -25,11 +25,11 @@ DevTrack is a full-stack productivity companion for engineers. It centralizes da
 
 ---
 ## 📸 Screenshots
-![Landing page screenshot](landing-page.png)
+![Landing page screenshot]()![alt text](landing-page.png)
 ![Dashboard screenshot]()![alt text](Dashboard.png)
-![logs screenshot](logs.png)
-![Goals screenshot](goals.png)
-![Snippets screenshot](snippet.png)
+![logs screenshot]()![alt text](logs.png)
+![Goals screenshot]()![alt text](goals.png)
+![Snippets screenshot]()![alt text](snippet.png)
 
 
 ## 📁 Project Structure
