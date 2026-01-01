@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchSnippets, createSnippet, updateSnippet, deleteSnippet } from '../services/snippetService';
 import { Card, CardHeader, CardBody, Button, Input, Modal, Badge, ConfirmDialog } from '../components/ui';
-import { Plus, Search, Copy, Edit, Trash2, Code2, Grid3x3, List, X } from 'lucide-react';
+import { Plus, Search, Copy, Edit, Trash2, Code2, LayoutGrid, List, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const languageColors = {
@@ -141,7 +141,7 @@ const Snippets = () => {
                     viewMode === 'grid' ? 'bg-card text-primary shadow-sm' : 'text-tertiary hover:text-primary'
                   }`}
                 >
-                  <Grid3x3 className="w-5 h-5" />
+                  <LayoutGrid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}

@@ -87,6 +87,7 @@ CORS_ORIGIN=http://localhost:5173
 ```
 VITE_API_URL=http://localhost:5000
 ```
+(You can copy `client/.env.example` to `.env` and tweak values for non-local deployments.)
 
 ### 4. Run Locally
 ```bash
