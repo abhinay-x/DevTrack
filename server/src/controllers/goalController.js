@@ -12,9 +12,10 @@ exports.createGoal = async (req, res) => {
   }
 
   try {
+    const { _id, ...goalData } = req.body;
     const goal = await Goal.create({
       userId: req.user._id,
-      ...req.body,
+      ...goalData,
     });
     res.status(201).json(goal);
   } catch (error) {
@@ -28,8 +29,28 @@ exports.createGoal = async (req, res) => {
 // @access  Private
 exports.getGoals = async (req, res) => {
   try {
-    const goals = await Goal.find({ userId: req.user._id }).sort({ createdAt: -1 });
-    res.json(goals);
+    const { status, page = 1, limit = 20, sort = '-createdAt' } = req.query;
+    const query = { userId: req.user._id };
+    if (status) query.status = status;
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const [goals, total] = await Promise.all([
+      Goal.find(query).sort(sort).skip(skip).limit(limitNum),
+      Goal.countDocuments(query),
+    ]);
+
+    res.json({
+      goals,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum),
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
@@ -41,9 +62,15 @@ exports.getGoals = async (req, res) => {
 // @access  Private
 exports.updateGoal = async (req, res) => {
   try {
+    const updateData = { ...req.body };
+    
+    if (updateData.status === 'Completed' && !updateData.completedAt) {
+      updateData.completedAt = new Date();
+    }
+    
     const goal = await Goal.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
-      req.body,
+      updateData,
       { new: true }
     );
     if (!goal) return res.status(404).json({ message: 'Goal not found' });

@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -10,13 +10,13 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = async (email, password) => {
-    const { data } = await axios.post('/api/auth/login', { email, password });
+    const { data } = await api.post('/api/auth/login', { email, password });
     setUser(data);
     localStorage.setItem('devtrack_user', JSON.stringify(data));
   };
 
   const register = async (payload) => {
-    const { data } = await axios.post('/api/auth/register', payload);
+    const { data } = await api.post('/api/auth/register', payload);
     setUser(data);
     localStorage.setItem('devtrack_user', JSON.stringify(data));
   };
@@ -25,15 +25,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('devtrack_user');
   };
-
-  // Attach token to axios
-  useEffect(() => {
-    if (user?.token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-    }
-  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout }}>

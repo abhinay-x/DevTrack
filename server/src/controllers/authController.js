@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const generateToken = require('../utils/generateToken');
 const User = require('../models/User');
+const AuditLog = require('../models/AuditLog');
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -55,9 +56,16 @@ exports.authUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user?.password && (await bcrypt.compare(password ?? '', user.password))) {
+      await AuditLog.create({
+        userId: user._id,
+        action: 'login',
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent'),
+      });
+
       res.json({
         _id: user._id,
         username: user.username,
@@ -99,21 +107,45 @@ exports.updateUserProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
-      user.username = req.body.username || user.username;
-      user.email = req.body.email || user.email;
+      const changes = {};
+      if (req.body.username && req.body.username !== user.username) {
+        changes.username = { from: user.username, to: req.body.username };
+        user.username = req.body.username;
+      }
+      if (req.body.email && req.body.email !== user.email) {
+        changes.email = { from: user.email, to: req.body.email };
+        user.email = req.body.email;
+      }
+      if (req.body.profilePicture !== undefined) {
+        changes.profilePicture = true;
+        user.profilePicture = req.body.profilePicture;
+      }
       if (req.body.password) {
+        changes.password = true;
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(req.body.password, salt);
       }
       if (req.body.theme) {
+        changes.theme = { from: user.theme, to: req.body.theme };
         user.theme = req.body.theme;
       }
       const updatedUser = await user.save();
+
+      if (Object.keys(changes).length > 0) {
+        await AuditLog.create({
+          userId: user._id,
+          action: 'profile_update',
+          details: changes,
+          ipAddress: req.ip,
+          userAgent: req.get('user-agent'),
+        });
+      }
 
       res.json({
         _id: updatedUser._id,
         username: updatedUser.username,
         email: updatedUser.email,
+        profilePicture: updatedUser.profilePicture,
         theme: updatedUser.theme,
         token: generateToken(updatedUser._id),
       });

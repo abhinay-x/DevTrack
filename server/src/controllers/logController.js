@@ -13,12 +13,12 @@ exports.createLog = async (req, res) => {
   }
 
   try {
+    const { _id, ...logData } = req.body;
     const log = await DailyLog.create({
       userId: req.user._id,
-      ...req.body,
+      ...logData,
     });
 
-    // Update streak after creating log
     await updateUserStreak(req.user._id);
 
     res.status(201).json(log);
@@ -33,7 +33,7 @@ exports.createLog = async (req, res) => {
 // @access  Private
 exports.getLogs = async (req, res) => {
   try {
-    const { category, startDate, endDate } = req.query;
+    const { category, startDate, endDate, page = 1, limit = 20, sort = '-date' } = req.query;
     const query = { userId: req.user._id };
 
     if (category) query.category = category;
@@ -43,8 +43,24 @@ exports.getLogs = async (req, res) => {
       if (endDate) query.date.$lte = new Date(endDate);
     }
 
-    const logs = await DailyLog.find(query).sort({ date: -1 });
-    res.json(logs);
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const [logs, total] = await Promise.all([
+      DailyLog.find(query).sort(sort).skip(skip).limit(limitNum),
+      DailyLog.countDocuments(query),
+    ]);
+
+    res.json({
+      logs,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum),
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

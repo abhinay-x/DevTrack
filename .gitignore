@@ -102,16 +102,6 @@ temp/
 ehthumbs.db
 Thumbs.db
 
-# Database
-*.db
-*.sqlite
-
-# Screenshots and test files
-screenshots/
-*.png
-*.jpg
-*.jpeg
-*.gif
-
 # Postman collections
 postman/
+!postman/DevTrack.postman_collection.json

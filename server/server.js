@@ -4,7 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
 const connectDB = require('./src/config/db');
+const swaggerSpecs = require('./src/config/swagger');
 
 // Environment variables
 const PORT = process.env.PORT || 5000;
@@ -12,12 +14,19 @@ const PORT = process.env.PORT || 5000;
 // Connect to database
 connectDB();
 
+// Setup indexes
+const setupIndexes = require('./src/config/indexes');
+setupIndexes();
+
 // Initialize app
 const app = express();
 
 // Global middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN?.split(',') || '*',
+  credentials: true,
+}));
 app.use(helmet());
 
 // Rate limiting
@@ -31,6 +40,9 @@ app.use(limiter);
 app.get('/', (req, res) => {
   res.json({ message: 'DevTrack API is running 🚀' });
 });
+
+// Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Mount routes
 const authRoutes = require('./src/routes/authRoutes');

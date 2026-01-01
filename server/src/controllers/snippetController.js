@@ -12,9 +12,10 @@ exports.createSnippet = async (req, res) => {
   }
 
   try {
+    const { _id, ...snippetData } = req.body;
     const snippet = await CodeSnippet.create({
       userId: req.user._id,
-      ...req.body,
+      ...snippetData,
     });
     res.status(201).json(snippet);
   } catch (error) {
@@ -28,7 +29,7 @@ exports.createSnippet = async (req, res) => {
 // @access  Private
 exports.getSnippets = async (req, res) => {
   try {
-    const { q, language } = req.query;
+    const { q, language, page = 1, limit = 20, sort = '-createdAt' } = req.query;
     const query = { userId: req.user._id };
     if (language) query.language = language;
     if (q) {
@@ -38,8 +39,24 @@ exports.getSnippets = async (req, res) => {
         { language: new RegExp(q, 'i') },
       ];
     }
-    const snippets = await CodeSnippet.find(query).sort({ createdAt: -1 });
-    res.json(snippets);
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const [snippets, total] = await Promise.all([
+      CodeSnippet.find(query).sort(sort).skip(skip).limit(limitNum),
+      CodeSnippet.countDocuments(query),
+    ]);
+
+    res.json({
+      snippets,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum),
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
