@@ -14,13 +14,15 @@ import Dashboard from './pages/Dashboard';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Support from './pages/Support';
+import Landing from './pages/Landing';
 import './index.css';
 
 function TitleManager() {
   const location = useLocation();
   useEffect(() => {
     const map = {
-      '/': 'DevTrack · Dashboard',
+      '/': 'DevTrack · Landing',
+      '/dashboard': 'DevTrack · Dashboard',
       '/logs': 'DevTrack · Logs',
       '/snippets': 'DevTrack · Snippets',
       '/goals': 'DevTrack · Goals',
@@ -36,6 +38,12 @@ function TitleManager() {
   return null;
 }
 
+const AppShell = () => (
+  <PrivateRoute>
+    <Layout />
+  </PrivateRoute>
+);
+
 function App() {
   return (
     <ThemeProvider>
@@ -43,18 +51,19 @@ function App() {
         <BrowserRouter>
           <TitleManager />
           <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/support" element={<Support />} />
 
-            <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-              <Route index element={<Dashboard />} />
-              <Route path="logs" element={<Logs />} />
-              <Route path="snippets" element={<Snippets />} />
-              <Route path="goals" element={<Goals />} />
-              <Route path="profile" element={<Profile />} />
+            <Route element={<AppShell />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/logs" element={<Logs />} />
+              <Route path="/snippets" element={<Snippets />} />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
