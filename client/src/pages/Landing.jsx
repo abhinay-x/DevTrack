@@ -127,7 +127,7 @@ const Landing = () => {
             </div>
             <div>
               <h1 className="text-4xl sm:text-5xl font-bold leading-tight gradient-text">
-                Default landing page for teams who ship deliberately.
+                DevTrack keeps engineering rituals aligned, measurable, and inspiring.
               </h1>
               <p className="mt-6 text-lg text-secondary">
                 DevTrack brings together daily logs, goals, and knowledge so engineers can see progress, unblock fast, and stay aligned without opening a spreadsheet.
