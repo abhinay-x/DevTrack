@@ -1,4 +1,4 @@
-import { ArrowRight, Activity, Code2, Target, ShieldCheck, Sparkles, BarChart3, Users } from 'lucide-react';
+import { ArrowRight, Activity, Code2, Target, ShieldCheck, Sparkles, BarChart3, Users, LogIn, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const keyStats = [
@@ -34,11 +34,86 @@ const timeline = [
   { title: 'Automation boost', body: 'Slack nudges, Postman scripts, and dashboards light up within the first sprint.' }
 ];
 
+const marketingNav = [
+  { label: 'Product', href: '#product' },
+  { label: 'Playbooks', href: '#timeline' },
+  { label: 'Pricing', href: '#cta' },
+  { label: 'Docs', href: '/support' },
+];
+
+const footerLinks = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'Dashboard', href: '/dashboard' },
+      { label: 'Logs', href: '/logs' },
+      { label: 'Goals', href: '/goals' },
+      { label: 'Snippets', href: '/snippets' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'Terms', href: '/terms' },
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Support', href: '/support' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Postman Collection', href: '/postman/DevTrack.postman_collection.json' },
+      { label: 'API Docs', href: '#product' },
+      { label: 'Roadmap', href: '/dashboard' },
+    ],
+  },
+];
+
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-theme text-primary">
+    <div className="min-h-screen bg-theme text-primary flex flex-col">
+      {/* Marketing Navbar */}
+      <header className="sticky top-0 z-40 border-b border-theme/60 backdrop-blur-md bg-theme/80">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-9 h-9 gradient-bg rounded-xl flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-semibold text-lg">DevTrack</span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            {marketingNav.map((item) =>
+              item.href.startsWith('#') ? (
+                <a key={item.label} href={item.href} className="text-secondary hover:text-primary transition-colors">
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.label} to={item.href} className="text-secondary hover:text-primary transition-colors">
+                  {item.label}
+                </Link>
+              )
+            )}
+          </nav>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-theme text-secondary hover:text-primary transition"
+            >
+              <LogIn className="w-4 h-4" />
+              Sign in
+            </Link>
+            <Link
+              to="/register"
+              className="inline-flex items-center px-5 py-2 rounded-xl bg-primary text-white font-semibold shadow-lg shadow-primary/30 hover:bg-primary-dark transition"
+            >
+              Join now
+            </Link>
+          </div>
+        </div>
+      </header>
+
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden" id="product">
         <div className="absolute inset-0">
           <div className="absolute -top-20 right-0 w-80 h-80 gradient-bg blur-3xl opacity-40" />
           <div className="absolute bottom-0 left-20 w-72 h-72 gradient-bg-alt blur-3xl opacity-30" />
@@ -146,7 +221,7 @@ const Landing = () => {
       </section>
 
       {/* Timeline */}
-      <section className="bg-card py-20 border-y border-theme">
+      <section className="bg-card py-20 border-y border-theme" id="timeline">
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
@@ -172,7 +247,7 @@ const Landing = () => {
       </section>
 
       {/* CTA */}
-      <section className="max-w-5xl mx-auto px-6 py-20 text-center">
+      <section className="max-w-5xl mx-auto px-6 py-20 text-center" id="cta">
         <p className="text-sm uppercase tracking-[0.3em] text-tertiary">READY WHEN YOU ARE</p>
         <h2 className="text-4xl font-bold mt-4 text-primary">Bring clarity to your engineering rituals.</h2>
         <p className="text-secondary mt-4 max-w-3xl mx-auto">
@@ -193,6 +268,60 @@ const Landing = () => {
           </Link>
         </div>
       </section>
+      {/* Footer */}
+      <footer className="bg-card border-t border-theme">
+        <div className="max-w-6xl mx-auto px-6 py-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-9 h-9 gradient-bg rounded-xl flex items-center justify-center text-white">
+                <Zap className="w-4 h-4" />
+              </div>
+              <span className="text-lg font-semibold">DevTrack</span>
+            </div>
+            <p className="text-secondary text-sm">
+              Developer activity intelligence for teams that care about focus, clarity, and creative velocity.
+            </p>
+          </div>
+          {footerLinks.map((column) => (
+            <div key={column.title}>
+              <p className="text-xs font-semibold tracking-[0.3em] text-tertiary mb-4">{column.title.toUpperCase()}</p>
+              <div className="space-y-2 text-sm">
+                {column.links.map((link) =>
+                  link.href.startsWith('/') ? (
+                    <Link key={link.label} to={link.href} className="block text-secondary hover:text-primary transition">
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a key={link.label} href={link.href} className="block text-secondary hover:text-primary transition">
+                      {link.label}
+                    </a>
+                  )
+                )}
+              </div>
+            </div>
+          ))}
+          <div>
+            <p className="text-xs font-semibold tracking-[0.3em] text-tertiary mb-4">NEWSLETTER</p>
+            <p className="text-secondary text-sm mb-4">Monthly engineering rituals, templates, and shipping prompts.</p>
+            <form className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                placeholder="work@email.com"
+                className="flex-1 rounded-xl border border-theme bg-theme px-4 py-2 focus:outline-none focus:border-primary"
+              />
+              <button
+                type="submit"
+                className="px-5 py-2 rounded-xl bg-primary text-white font-medium hover:bg-primary-dark transition"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+        <div className="border-t border-theme py-6 text-center text-xs text-tertiary">
+          © {new Date().getFullYear()} DevTrack. Built for engineering teams that ship deliberately.
+        </div>
+      </footer>
     </div>
   );
 };
