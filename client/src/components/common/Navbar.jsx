@@ -59,6 +59,13 @@ const Navbar = () => {
     navigate('/logs?create=true');
   };
 
+  const handleLogout = () => {
+    logout();
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+    navigate('/');
+  };
+
   return (
     <>
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-theme" role="navigation" aria-label="Main navigation">
@@ -154,7 +161,7 @@ const Navbar = () => {
                   </Link>
                   <AccessibleButton
                     variant="ghost"
-                    onClick={() => { setProfileMenuOpen(false); logout(); }}
+                    onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-hover hover:text-danger rounded-b-lg"
                     role="menuitem"
                   >
@@ -268,7 +275,7 @@ const Navbar = () => {
                 <AccessibleButton
                   variant="ghost"
                   className="w-full justify-start px-4 py-3 text-white/80 hover:text-danger"
-                  onClick={() => { setMobileMenuOpen(false); logout(); }}
+                  onClick={handleLogout}
                   ariaLabel="Sign out"
                 >
                   <LogOut className="w-4 h-4 mr-3" aria-hidden="true" />

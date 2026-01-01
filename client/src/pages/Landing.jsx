@@ -1,5 +1,7 @@
+import { useContext, useEffect } from 'react';
 import { ArrowRight, Activity, Code2, Target, ShieldCheck, Sparkles, BarChart3, Users, LogIn, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const keyStats = [
   { label: 'Teams onboarded', value: '42+' },
@@ -70,6 +72,15 @@ const footerLinks = [
 ];
 
 const Landing = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
+
   return (
     <div className="min-h-screen bg-theme text-primary flex flex-col">
       {/* Marketing Navbar */}

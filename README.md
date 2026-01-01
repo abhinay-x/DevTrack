@@ -24,6 +24,11 @@ DevTrack is a full-stack productivity companion for engineers. It centralizes da
 8. **Footer & Static Pages** – Privacy, Terms, and Support pages routed publicly (`/privacy`, `/terms`, `/support`) plus footer shortcuts across the app.
 
 ---
+## 📸 Screenshots
+![Dashboard screenshot](landing-page.png)
+![Goals screenshot](./docs/images/goals.png)
+![Snippets screenshot](./docs/images/snippets.png)
+![Analytics screenshot](./docs/images/analytics.png)
 
 ## 📁 Project Structure
 ```
@@ -169,6 +174,11 @@ These routes are public and linked throughout the dashboard footer for quick acc
 - Background workers (BullMQ/Cron) can be introduced for intensive analytics without blocking request cycles.
 
 ---
+## Deployment
+- Frontend: https://dev-track-tawny.vercel.app/
+- Backend: https://devtrack-qn0l.onrender.com
+- Git repository: https://github.com/abhinay-x/devtrack
+- Use environment variables for sensitive config in production.
 
 ## 🤝 Contributing
 1. Fork the repo and create a feature branch.
